@@ -112,7 +112,11 @@
 								htmlClientWidth >= PC_MAINWRAP_WIDTH_PX
 									? `45%`
 									: `${(htmlClientWidth - 120) / 2 - PC_MAINWRAP_PAD_PX}px`
-							} 86px`,
+							} ${
+								htmlClientWidth >= PC_MAINWRAP_WIDTH_PX
+									? `86px`
+									: `52px`
+							}`,
 						},
 
 						'body > #main-wrap > [src=\'./main_loc.svg\']': {
