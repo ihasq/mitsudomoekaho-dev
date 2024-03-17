@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Document</title>
+		<style>
+			@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300&display=swap');
+
+			* {
+				box-sizing: border-box;
+			}
+
+			html,
+			body {
+				width: 100%;
+				margin: 0px;
+				padding: 0px;
+				overflow-x: hidden;
+			}
+
+			body {
+				background-color: #f2f3ff;
+			}
+
+			body > #main-wrap {
+				padding: 0px 24px;
+			}
+
+			
+			body > #main-wrap > * {
+				margin-bottom: 90px;
+			}
+
+			body > #main-wrap > #gallery-wrap {
+				position: relative;
+				width: 100%;
+				height: 600px;
+				background-color: #f00;
+				overflow: hidden;
+				border-radius: 30px;
+			}
+
+			body > #main-wrap > #gallery-wrap > * {
+				position: absolute;
+				width: 100%;
+				top: auto;
+				bottom: auto;
+			}
+		</style>
+	</head>
+	<body hidden>
+		<div id="main-wrap">
+			<img src="./main_monn.svg"/>
+			<img src="./main_loc.svg"/>
+			<img src="./main_shodo.svg"/>
+			<img src="./main_title.svg"/>
+			<div id="gallery-wrap">
+				<img src="./1.jpg"/>
+			</div>
+		</div>
+		<script type="module">
+			
+			{
+				document.body.onload = () => document.body.removeAttribute("hidden");
+
+				const
+					PC_MAINWRAP_WIDTH_PX = 1200,
+					PC_MONN_WIDTH_PX = 700,
+					PC_LOC_WIDTH_PX = 700,
+					PC_SHODO_WIDTH_PX = 700,
+					PC_MAINWRAP_PAD_PX = 24;
+
+				const $ = (selectors) => document.querySelector(selectors);
+				$.all = (selectors) => document.querySelectorAll(selectors);
+
+				function fixStyle(selectorsList) {
+					Object.keys(selectorsList).forEach(selectorsIndex => {
+						Object.assign($(selectorsIndex).style, selectorsList[selectorsIndex])
+					})
+				}
+
+				function fixStyleWhenResize() {
+
+					const htmlClientWidth= $`html`.clientWidth;
+
+					fixStyle({
+						'body > #main-wrap': {
+
+							width: `${
+								htmlClientWidth >= PC_MAINWRAP_WIDTH_PX
+									? PC_MAINWRAP_WIDTH_PX
+									: htmlClientWidth
+							}px`,
+
+							marginLeft: `${
+								htmlClientWidth >= PC_MAINWRAP_WIDTH_PX
+									? (htmlClientWidth - PC_MAINWRAP_WIDTH_PX) / 2
+									: 0
+							}px`,
+						},
+
+						'body > #main-wrap > [src=\'./main_monn.svg\']': {
+
+							width: `${
+								htmlClientWidth >= PC_MAINWRAP_WIDTH_PX
+									? `10%`
+									: `120px`
+							}`,
+
+							margin: `128px ${
+								htmlClientWidth >= PC_MAINWRAP_WIDTH_PX
+									? `45%`
+									: `${(htmlClientWidth - 120) / 2 - PC_MAINWRAP_PAD_PX}px`
+							} 86px`,
+						},
+
+						'body > #main-wrap > [src=\'./main_loc.svg\']': {
+
+							width: `${
+								htmlClientWidth >= PC_LOC_WIDTH_PX
+									? `20%`
+									: `40%`
+							}`,
+
+							margin: `0px ${
+								htmlClientWidth >= PC_LOC_WIDTH_PX
+									? `40%`
+									: `30%`
+							} ${
+								htmlClientWidth >= PC_LOC_WIDTH_PX
+									? `10px`
+									: `7.5px`
+							}`,
+						},
+
+						'body > #main-wrap > [src=\'./main_shodo.svg\']': {
+
+							width: `${
+								htmlClientWidth >= PC_SHODO_WIDTH_PX
+									? `50%`
+									: `90%`
+							}`,
+
+							margin: `0px ${
+								htmlClientWidth >= PC_SHODO_WIDTH_PX
+									? `25%`
+									: `5%`
+							} ${
+								htmlClientWidth >= PC_SHODO_WIDTH_PX
+									? `30px`
+									: `20px`
+							}`,
+						},
+
+						'body > #main-wrap > [src=\'./main_title.svg\']': {
+
+							width: `${
+								htmlClientWidth >= PC_MONN_WIDTH_PX
+									? `40%`
+									: `80%`
+							}`,
+
+							margin: `0px ${
+								htmlClientWidth >= PC_MONN_WIDTH_PX
+									? `30%`
+									: `10%`
+							} 96px`,
+						},
+					})
+				};
+
+				addEventListener("resize", fixStyleWhenResize, { passive: true });
+
+				// addEventListener("wheel", ({ deltaY }) => {
+				// 	scroll(
+				// 		scrollX,
+				// 		scrollY + (deltaY / 1.5)
+				// 	);
+				// }, { passive: true });
+
+				// addEventListener("scroll", ({ deltaY }) => {
+				// 	scroll(
+				// 		scrollX,
+				// 		scrollY + (deltaY / 1.5)
+				// 	);
+				// }, { passive: true });
+				
+				setTimeout(fixStyleWhenResize);
+
+			}
+
+		</script>
+	</body>
+</html>
