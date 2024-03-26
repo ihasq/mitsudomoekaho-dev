@@ -6,6 +6,7 @@
 		<title>Document</title>
 		<style>
 			@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300&display=swap');
+			@import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400&display=swap');
 
 			* {
 				box-sizing: border-box;
@@ -13,6 +14,7 @@
 
 			html,
 			body {
+				position: relative;
 				width: 100%;
 				margin: 0px;
 				padding: 0px;
@@ -47,6 +49,42 @@
 				top: auto;
 				bottom: auto;
 			}
+
+			body > #main-wrap > #page-menu {
+				width: 100%;
+				display: grid;
+				grid-template-columns: repeat(5, auto);
+				column-gap: 5%;
+			}
+
+			body > #main-wrap > #page-menu > span {
+				text-align: center;
+				font-family: "Nanum Myeongjo", serif;
+				font-size: 24px;
+				letter-spacing: 8px;
+				user-select: none;
+			}
+
+			body > #main-wrap > #page-menu > #current-selection {
+				text-decoration: underline;
+				text-underline-offset: 8px;
+			}
+
+			body > #mobile-nav {
+				position: fixed;
+				left: 0;
+				top: 0;
+				width: 100%;
+				height: 80px;
+
+				transition: background-color 180ms;
+			}
+
+			body > #mobile-nav > #mobile-menu {
+				height: 100%;
+				overflow: hidden;
+			}
+
 		</style>
 	</head>
 	<body hidden>
@@ -58,21 +96,32 @@
 			<div id="gallery-wrap">
 				<img src="./1.jpg"/>
 			</div>
+			<div id="page-menu" hidden="false">
+				<span id="current-selection">news</span>
+				<span>menu</span>
+				<span>story</span>
+				<span>workshop</span>
+				<span>contact</span>
+			</div>
+		</div>
+		<div id="mobile-nav" hidden>
+			<img id="mobile-menu" src="./mobile_menu.svg"/>
 		</div>
 		<script type="module">
 			
 			{
-				document.body.onload = () => document.body.removeAttribute("hidden");
-
+				
 				const
 					PC_MAINWRAP_WIDTH_PX = 1200,
 					PC_MONN_WIDTH_PX = 700,
 					PC_LOC_WIDTH_PX = 700,
 					PC_SHODO_WIDTH_PX = 700,
 					PC_MAINWRAP_PAD_PX = 24;
-
+				
 				const $ = (selectors) => document.querySelector(selectors);
 				$.all = (selectors) => document.querySelectorAll(selectors);
+
+				$`body`.onload = () => document.body.removeAttribute("hidden");
 
 				function fixStyle(selectorsList) {
 					Object.keys(selectorsList).forEach(selectorsIndex => {
@@ -83,6 +132,10 @@
 				function fixStyleWhenResize() {
 
 					const htmlClientWidth= $`html`.clientWidth;
+
+					const amIMobile = htmlClientWidth <= 700;
+
+					$`#mobile-nav`[amIMobile? 'removeAttribute' : 'setAttribute']("hidden", "");
 
 					fixStyle({
 						'body > #main-wrap': {
@@ -108,7 +161,11 @@
 									: `120px`
 							}`,
 
-							margin: `128px ${
+							margin: `${
+								htmlClientWidth >= PC_MAINWRAP_WIDTH_PX
+									? `120px`
+									: `86px`
+							} ${
 								htmlClientWidth >= PC_MAINWRAP_WIDTH_PX
 									? `45%`
 									: `${(htmlClientWidth - 120) / 2 - PC_MAINWRAP_PAD_PX}px`
@@ -142,13 +199,13 @@
 
 							width: `${
 								htmlClientWidth >= PC_SHODO_WIDTH_PX
-									? `50%`
+									? `52%`
 									: `90%`
 							}`,
 
 							margin: `0px ${
 								htmlClientWidth >= PC_SHODO_WIDTH_PX
-									? `25%`
+									? `24%`
 									: `5%`
 							} ${
 								htmlClientWidth >= PC_SHODO_WIDTH_PX
@@ -170,6 +227,10 @@
 									? `30%`
 									: `10%`
 							} 96px`,
+						},
+
+						'body > #main-wrap > #page-menu': {
+							visibility: amIMobile? 'hidden' : 'visible',
 						},
 					})
 				};
