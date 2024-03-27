@@ -21,6 +21,10 @@
 				overflow-x: hidden;
 			}
 
+			html {
+				scroll-behavior: smooth;
+			}
+
 			body {
 				background-color: #f2f3ff;
 			}
@@ -29,7 +33,6 @@
 				padding: 0px 24px;
 			}
 
-			
 			body > #main-wrap > * {
 				margin-bottom: 90px;
 			}
@@ -48,13 +51,15 @@
 				width: 100%;
 				top: auto;
 				bottom: auto;
+				object-fit: cover;
+				height: 600px;
 			}
 
 			body > #main-wrap > #page-menu {
 				width: 100%;
 				display: grid;
 				grid-template-columns: repeat(5, auto);
-				column-gap: 5%;
+				column-gap: 3%;
 			}
 
 			body > #main-wrap > #page-menu > span {
@@ -70,24 +75,51 @@
 				text-underline-offset: 8px;
 			}
 
+			body > #main-wrap > h1 {
+				font-family: "Nanum Myeongjo", serif;
+				font-size: 30px;
+				letter-spacing: 12px;
+				font-weight: 400;
+			}
+
 			body > #mobile-nav {
 				position: fixed;
 				left: 0;
 				top: 0;
-				width: 100%;
+				width: 80px;
 				height: 80px;
 
 				transition: background-color 180ms;
 			}
 
-			body > #mobile-nav > #mobile-menu {
-				height: 100%;
-				overflow: hidden;
+			body > #mobile-nav > * {
+				position: absolute;
+				height: 2px;
+				width: 40px;
+				left: 20px;
+				backdrop-filter: invert(80%);
+			}
+
+			body > #mobile-nav > *:nth-child(1) {
+				top: 29px;
+			}
+
+			body > #mobile-nav > *:nth-child(2) {
+				top: 39px;
+			}
+
+			body > #mobile-nav > *:nth-child(3) {
+				top: 49px;
+			}
+
+			.stick {
+				position: fixed
 			}
 
 		</style>
 	</head>
 	<body hidden>
+
 		<div id="main-wrap">
 			<img src="./main_monn.svg"/>
 			<img src="./main_loc.svg"/>
@@ -103,14 +135,20 @@
 				<span>workshop</span>
 				<span>contact</span>
 			</div>
+			<span id="news"></span>
+			<div id="news-index">
+
+			</div>
 		</div>
-		<div id="mobile-nav" hidden>
-			<img id="mobile-menu" src="./mobile_menu.svg"/>
+		<div id="mobile-nav">
+			<div></div>
+			<div></div>
+			<div></div>
 		</div>
+
 		<script type="module">
 			
 			{
-				
 				const
 					PC_MAINWRAP_WIDTH_PX = 1200,
 					PC_MONN_WIDTH_PX = 700,
@@ -121,7 +159,18 @@
 				const $ = (selectors) => document.querySelector(selectors);
 				$.all = (selectors) => document.querySelectorAll(selectors);
 
-				$`body`.onload = () => document.body.removeAttribute("hidden");
+				$`body`.onload = () => {
+					document.body.removeAttribute("hidden");
+					setTimeout(fixStyleWhenResize);
+				};
+
+				$.all`#page-menu > span`.forEach(el => el.scrollTo = `#${el.textContent}`);
+
+				$`#page-menu`.addEventListener(
+					"click",
+					({ target: { scrollTo } }) => typeof scrollTo === "string"? (globalThis.location.hash = scrollTo) : null,
+					{ passive: true }
+				);
 
 				function fixStyle(selectorsList) {
 					Object.keys(selectorsList).forEach(selectorsIndex => {
@@ -131,7 +180,7 @@
 
 				function fixStyleWhenResize() {
 
-					const htmlClientWidth= $`html`.clientWidth;
+					const htmlClientWidth= document.documentElement.clientWidth;
 
 					const amIMobile = htmlClientWidth <= 700;
 
@@ -230,7 +279,7 @@
 						},
 
 						'body > #main-wrap > #page-menu': {
-							visibility: amIMobile? 'hidden' : 'visible',
+							display: amIMobile? 'none' : 'grid',
 						},
 					})
 				};
@@ -250,8 +299,6 @@
 				// 		scrollY + (deltaY / 1.5)
 				// 	);
 				// }, { passive: true });
-				
-				setTimeout(fixStyleWhenResize);
 
 			}
 
